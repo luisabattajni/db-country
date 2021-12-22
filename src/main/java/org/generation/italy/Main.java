@@ -1,13 +1,13 @@
 package org.generation.italy;
 
 import java.sql.Connection;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.time.LocalDate;
+//import java.time.LocalDate;
 
 public class Main {
 	
@@ -18,18 +18,16 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		
-//		//???
-//		LocalDate locald = nationalDay;
-//		Date date = Date.valueOf(locald); 
-		
-//		java.sql.Date.valueOf( nationalDay );
+
 
 		
 		try(Connection con = DriverManager.getConnection(URL, USER, PASSWORD)){
 			
 			Country userCountryId = selectCountryById (con,scan);
 			if(userCountryId != null) {
-				System.out.println("Country: " +  userCountryId.getName());
+				System.out.println("Nazione: " +  userCountryId.getName());
+			} else {
+				System.out.println("Non in elenco");
 			}
 			
 //			// login
