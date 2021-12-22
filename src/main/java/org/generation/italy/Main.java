@@ -1,13 +1,13 @@
 package org.generation.italy;
 
 import java.sql.Connection;
-//import java.sql.Date;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-//import java.time.LocalDate;
+import java.time.LocalDate;
 
 public class Main {
 	
@@ -26,6 +26,7 @@ public class Main {
 			Country userCountryId = selectCountryById (con,scan);
 			if(userCountryId != null) {
 				System.out.println("Nazione: " +  userCountryId.getName());
+				// if national day = null fare un update con nuova data
 			} else {
 				System.out.println("Non in elenco");
 			}
@@ -80,6 +81,7 @@ public class Main {
 						rsCountry.getInt(1), 
 						rsCountry.getString(2), 
 						rsCountry.getInt(3), 
+						//mettere if per date null
 						rsCountry.getDate(4).toLocalDate(), 
 						rsCountry.getString(5), 
 						rsCountry.getString(6), 
@@ -93,24 +95,42 @@ public class Main {
 		
 		return userCountryId; 
 	}
-//	private static void addUserTodo(Connection con, Scanner scan, User loggedUser) throws SQLException {
-//		String sql = "INSERT INTO todo "
-//				+ "(created_at, user_id, todo, completed) "
-//				+ "VALUES(?, ?, ?, ?);";
-//		
-//		System.out.println("What is you todo?");
+	
+	
+	private static void updateCountry(Connection con, Country country) throws SQLException {
+		String updateCountry = "UPDATE countries \n"
+				+ "SET country_id = ?,"
+				+ "name = ?, \n"
+				+ "area = ?,  \n"
+				+ "national_day = ?, \n"
+				+ "country_code2 = ? \n,"
+				+ "country_code3 = ? \n,"
+				+ "region_id =? \n"
+				+ "WHERE c.country_id = ?;";
+
+		
+//		System.out.println("What do you want to add?");
 //		String todo = scan.nextLine();
 //		Timestamp now = new Timestamp(System.currentTimeMillis());
-//		
-//		try(PreparedStatement insert = con.prepareStatement(sql)){
-//			insert.setTimestamp(1, now);
-//			insert.setInt(2, loggedUser.getId());
-//			insert.setString(3, todo);
-//			insert.setBoolean(4, false);
-//			
-//			insert.executeUpdate();
-//		}
-//		
-//	}
+		
+//		System.out.println("Inserisci l'id di una nazione su cui eseguire update: ");
+//		int countryId = Integer.parseInt(scan.nextLine());
+		
+		try(PreparedStatement psUp = con.prepareStatement(updateCountry)){
+			psUp.setInt(1, country.getCountryId());
+			psUp.setString(2, country.getName());			
+			psUp.setInt(3, country.getArea());
+			//localdate da convertire in date
+//			psUp.setDate (4, country.getNationalDay());
+			psUp.setString(5, country.getCountryCode2());	
+			psUp.setString(6, country.getCountryCode3());	
+			psUp.setInt(7, country.getRegionId());
+			psUp.setInt(8, country.getCountryId());
+			
+			
+			int affectedRows = psUp.executeUpdate();
+		}
+		
+	}
 
 }
