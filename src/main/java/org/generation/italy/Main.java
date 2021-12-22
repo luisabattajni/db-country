@@ -21,6 +21,8 @@ public class Main {
 //		//???
 //		LocalDate locald = nationalDay;
 //		Date date = Date.valueOf(locald); 
+		
+//		java.sql.Date.valueOf( nationalDay );
 
 		
 		try(Connection con = DriverManager.getConnection(URL, USER, PASSWORD)){
@@ -67,16 +69,24 @@ public class Main {
 		System.out.println("Inserisci l'id di una nazione: ");
 		int countryId = Integer.parseInt(scan.nextLine());
 		
-		String selectCountry = "SELECT * \n"
-				+ "FROM countries \n"
+		String selectCountry = "SELECT *\n"
+				+ "FROM countries c\n"
 				+ "WHERE c.country_id = ?;";
 		
 		try(PreparedStatement psCountry = con.prepareStatement(selectCountry)){
 			psCountry.setInt(1, countryId);
 			try(ResultSet rsCountry = psCountry.executeQuery()) {
 				if (rsCountry.next()) {
-				//data - stackov
-				userCountryId = new Country(rsCountry.getInt(1), rsCountry.getString(2), rsCountry.getInt(3), rsCountry.getDate(4), rsCountry.getString(5), rsCountry.getString(6), rsCountry.getInt(7));
+				userCountryId = 
+					new Country(
+						rsCountry.getInt(1), 
+						rsCountry.getString(2), 
+						rsCountry.getInt(3), 
+						rsCountry.getDate(4).toLocalDate(), 
+						rsCountry.getString(5), 
+						rsCountry.getString(6), 
+						rsCountry.getInt(7)
+					);
 			}
 		}
 			
@@ -85,6 +95,24 @@ public class Main {
 		
 		return userCountryId; 
 	}
-
+//	private static void addUserTodo(Connection con, Scanner scan, User loggedUser) throws SQLException {
+//		String sql = "INSERT INTO todo "
+//				+ "(created_at, user_id, todo, completed) "
+//				+ "VALUES(?, ?, ?, ?);";
+//		
+//		System.out.println("What is you todo?");
+//		String todo = scan.nextLine();
+//		Timestamp now = new Timestamp(System.currentTimeMillis());
+//		
+//		try(PreparedStatement insert = con.prepareStatement(sql)){
+//			insert.setTimestamp(1, now);
+//			insert.setInt(2, loggedUser.getId());
+//			insert.setString(3, todo);
+//			insert.setBoolean(4, false);
+//			
+//			insert.executeUpdate();
+//		}
+//		
+//	}
 
 }
